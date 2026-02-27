@@ -21,14 +21,14 @@ RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
 # 创建必要的目录
 RUN mkdir -p /certs /auth /data
 
-# 复制智能启动脚本
+# 复制启动脚本
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 声明卷，与宿主机挂载点对应
 VOLUME ["/certs", "/auth", "/data"]
 
-# 声明容器内服务端口为 5000
+# 声明容器内服务端口为 5000，来自 registry:2 镜像
 EXPOSE 5000
 
 # 添加健康检查

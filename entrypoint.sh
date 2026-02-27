@@ -2,12 +2,14 @@
 set -e
 
 # 接收如下环境变量
-#   DOMAIN        用于CA证书SAN属性的域名列表，docker 客户端访问仓库可以使用这些域名，否则 tls 报错。
-#   IP_ADDRS      用于CA证书SAN属性的ip地址列表，docker 客户端访问仓库可以使用这些ip地址，否则 tls 报错。
-#   AUTH_USER     用于 htpasswd 认证的用户名
-#   AUTH_PASS     用于 htpasswd 认证的密码
+#   TZ            自制镜像支持用环境变量设置时区
+#   DOMAIN        用于生成CA证书SAN属性的域名列表，docker 客户端访问仓库可以使用这些域名，否则 tls 报错。
+#   IP_ADDRS      用于生成CA证书SAN属性的ip地址列表，docker 客户端访问仓库可以使用这些ip地址，否则 tls 报错。
+#   AUTH_USER     用于生成 htpasswd 认证的用户名
+#   AUTH_PASS     用于生成 htpasswd 认证的密码
 #
 # 为保证可多次执行，如果证书等文件已经存在则不使用这些变量生成对应的文件
+# 然后引导 registry 启动仓库服务
 
 # ---------- TLS 证书处理 ----------
 if [ ! -f /certs/domain.crt ] || [ ! -f /certs/domain.key ]; then
