@@ -26,16 +26,17 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 声明卷，与宿主机挂载点对应
+# 注意：基础镜像 registry:2 有一个声明卷 /var/lib/registry，在后面的 compose.yaml 里用 na 卷做了个挂载，避免了每次运行时会创建一个匿名卷
 VOLUME ["/certs", "/auth", "/data"]
 
-# 声明容器内服务端口为 5000，来自 registry:2 镜像
+# 声明容器内服务端口为 5000，来自基础镜像 registry:2
 EXPOSE 5000
 
-# 添加健康检查
-# 每隔30秒检查一次，超时10秒，容器启动后等待5秒开始检查，连续失败3次视为不健康
+# 健康检查，放到 compose 文件里做
+# 每隔30秒检查一次，超时10秒，容器启动后等待10秒开始检查，连续失败3次视为不健康
 # 检查命令：使用 curl 访问 registry 的 v2 端点（忽略证书验证），只要服务能响应（包括 401 未授权）即视为健康
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -k https://localhost:5000/v2/ || exit 1
+#HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+#  CMD curl -k https://localhost:5000/v2/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
 
